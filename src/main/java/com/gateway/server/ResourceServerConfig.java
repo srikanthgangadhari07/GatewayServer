@@ -2,7 +2,6 @@ package com.gateway.server;
 
 import javax.crypto.spec.SecretKeySpec;
 
-import org.bouncycastle.jcajce.spec.ScryptKeySpec;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
@@ -16,12 +15,11 @@ import org.springframework.security.web.server.SecurityWebFilterChain;
 @SuppressWarnings("removal")
 public class ResourceServerConfig {
 	
-	
+	//To Access any API user will have to be authenticated before processing the request
 	@Bean
 	public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity httpSecurity) {
-		httpSecurity.authorizeExchange().anyExchange().authenticated()
-		.and()
-		.oauth2ResourceServer().jwt();
+        httpSecurity.authorizeExchange(exchange -> exchange.anyExchange().authenticated())
+                .oauth2ResourceServer(server -> server.jwt()).csrf(csrf -> csrf.disable());
 		return httpSecurity.build();
 	}
 	
